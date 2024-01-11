@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useStarWars } from "../../Services/store/StarWarsListProvider";
+import "../StarWarsList/style.css"
 
 const StarWarsList = () => {
     const { data } = useStarWars();
@@ -26,6 +27,7 @@ const StarWarsList = () => {
         skinColor:"",
     });
 
+
     const filteredData = data
         ? data.filter((item:StarWars) => {
               return (
@@ -48,6 +50,45 @@ const StarWarsList = () => {
         }));
     };
 
+    const [sortColumn, setSortColumn] = useState<string | null>(null);
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc" |"default">("default");
+
+    const handleSort = (column: string) => {
+        if (sortColumn === column) {
+            switch (sortDirection) {
+                case "default":
+                    setSortDirection("asc");
+                    break;
+                case "asc":
+                    setSortDirection("desc");
+                    break;
+                case "desc":
+                    setSortColumn(null); 
+                    setSortDirection("default");
+                    break;
+            }
+        } else {
+            setSortColumn(column);
+            setSortDirection("asc");
+        }
+    };
+
+    const sortedData = [...filteredData].sort((a: any, b: any) => {
+        if (sortColumn) {
+            const aValue = a[sortColumn];
+            const bValue = b[sortColumn];
+
+            if (typeof aValue === "string" && typeof bValue === "string") {
+                return sortDirection === "asc"
+                    ? aValue.localeCompare(bValue)
+                    : bValue.localeCompare(aValue);
+            } else if (typeof aValue === "number" && typeof bValue === "number") {
+                return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+            }
+        }
+        return 0;
+    });
+
     return (
         <>
             <div className="d-flex justify-content-center">
@@ -63,6 +104,8 @@ const StarWarsList = () => {
                                         value={searchTerms.name}
                                         onChange={(e) => handleSearchChange("name", e.target.value)}
                                     />
+                                   <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("name")}> Name</div>
                                 </th>
                                 <th scope="col">
                                     <input
@@ -71,6 +114,8 @@ const StarWarsList = () => {
                                         value={searchTerms.birthYear}
                                         onChange={(e) => handleSearchChange("birthYear", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("birthYear")}> Birth Year</div>
                                 </th>
                                 <th scope="col">
                                     <input
@@ -79,6 +124,8 @@ const StarWarsList = () => {
                                         value={searchTerms.eyeColor}
                                         onChange={(e) => handleSearchChange("eyeColor", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                     onClick={() => handleSort("eyeColor")}> Eye Color</div>
                                 </th>
                                 <th scope="col">
                                     <input
@@ -87,6 +134,8 @@ const StarWarsList = () => {
                                         value={searchTerms.gender}
                                         onChange={(e) => handleSearchChange("gender", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("gender")}> Gender</div>
                                 </th>
                                 <th scope="col">
                                     <input
@@ -95,6 +144,8 @@ const StarWarsList = () => {
                                         value={searchTerms.hairColor}
                                         onChange={(e) => handleSearchChange("hairColor", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("hairColor")}> Hair Color</div>
                                 </th>
                                 <th scope="col">
                                     <input
@@ -103,6 +154,8 @@ const StarWarsList = () => {
                                         value={searchTerms.height}
                                         onChange={(e) => handleSearchChange("height", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("height")}> Height</div>
                                 </th>
                                 <th scope="col">
                                     <input
@@ -111,19 +164,23 @@ const StarWarsList = () => {
                                         value={searchTerms.mass}
                                         onChange={(e) => handleSearchChange("mass", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("mass")}> Mass</div>
                                 </th>
                                 <th scope="col">
                                     <input
                                         type="text"
-                                        placeholder="Mass"
-                                        value={searchTerms.mass}
-                                        onChange={(e) => handleSearchChange("mass", e.target.value)}
+                                        placeholder="Skin Color"
+                                        value={searchTerms.skinColor}
+                                        onChange={(e) => handleSearchChange("skinColor", e.target.value)}
                                     />
+                                    <div className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("skinColor")}> Skin Color</div>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredData.map((item:StarWars, index:number) => (
+                            {sortedData.map((item:StarWars, index:number) => (
                                 <tr key={index}>
                                     <th scope="row">{index + 1}</th>
                                     <td>{item.name}</td>
