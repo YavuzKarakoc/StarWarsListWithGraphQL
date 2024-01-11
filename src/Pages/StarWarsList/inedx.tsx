@@ -72,20 +72,27 @@ const StarWarsList = () => {
             setSortDirection("asc");
         }
     };
-
+    
     const sortedData = [...filteredData].sort((a: any, b: any) => {
         if (sortColumn) {
             const aValue = a[sortColumn];
             const bValue = b[sortColumn];
-
+    
+            if (aValue === null && bValue === null) {
+                return 0;
+            } else if (aValue === null) {
+                return 1; // aValue null, bValue null değilse, bValue en önce gelmeli
+            } else if (bValue === null) {
+                return -1; // bValue null, aValue null değilse, aValue en önce gelmeli
+            }
+    
             if (typeof aValue === "string" && typeof bValue === "string") {
-                return sortDirection === "asc"
-                    ? aValue.localeCompare(bValue)
-                    : bValue.localeCompare(aValue);
+                return sortDirection === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
             } else if (typeof aValue === "number" && typeof bValue === "number") {
                 return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
             }
         }
+    
         return 0;
     });
 
