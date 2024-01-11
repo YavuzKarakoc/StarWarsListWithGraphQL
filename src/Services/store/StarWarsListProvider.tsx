@@ -10,6 +10,8 @@ import React, {
 import { gql, useQuery } from "@apollo/client";
 
 export type StarWarsListContextProps = {
+    totalCount:number;
+    setTotalCount:Dispatch<SetStateAction<number>>;
     data: any;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;
@@ -23,6 +25,8 @@ export type StarWarsListContextProps = {
 };
 
 export const initialListView: StarWarsListContextProps = {
+    totalCount:0,
+    setTotalCount: () => {},
     data: null,
     pageSize: 10,
     setPageSize: () => {},
@@ -45,6 +49,7 @@ interface StarWarsContextProviderProps {
 const StarWarsListProvider: React.FC<StarWarsContextProviderProps> = ({
     children,
 }) => {
+    const [totalCount, setTotalCount] = useState<number>(initialListView.totalCount);
     const [startCursor, setStartCursor] = useState<string>(initialListView.startCursor);
     const [endCursor, setEndCursor] = useState<string>(initialListView.endCursor);
     const [afterCursor, setAfterCursor] = useState<string>(initialListView.afterCursor);
@@ -92,15 +97,19 @@ const StarWarsListProvider: React.FC<StarWarsContextProviderProps> = ({
     useEffect(() => {
         if (!loading && !error && queryData) {
             setData(queryData.allPeople.people);
+            setTotalCount(queryData.allPeople.totalCount)
             setStartCursor(queryData.allPeople.pageInfo.startCursor)
             setEndCursor(queryData.allPeople.pageInfo.endCursor)
             setTotalPages(Math.ceil(queryData.allPeople.totalCount / pageSize));
+            
         }
     }, [loading, error, queryData]);
 
     return (
         <ListViewContext.Provider
             value={{
+                totalCount,
+                setTotalCount,
                 data,
                 pageSize,
                 setPageSize,

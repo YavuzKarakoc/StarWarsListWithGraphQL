@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useStarWars } from "../../Services/store/StarWarsListProvider";
 import "../StarWarsList/style.css"
 
 const StarWarsList = () => {
-    const { data } = useStarWars();
-    console.log(data)
+    const { data, totalCount, setTotalCount, pageSize, setPageSize } = useStarWars();
+    
     type StarWars = {
         name: string;
         birthYear: string;
@@ -27,28 +27,36 @@ const StarWarsList = () => {
         skinColor:"",
     });
 
-
-    const filteredData = data
-        ? data.filter((item:StarWars) => {
-              return (
-                  item.name.toLowerCase().includes(searchTerms.name.toLowerCase()) &&
-                  item.birthYear.toLowerCase().includes(searchTerms.birthYear.toLowerCase()) &&
-                  item.eyeColor.toLowerCase().includes(searchTerms.eyeColor.toLowerCase()) &&
-                  item.gender.toLowerCase().includes(searchTerms.gender.toLowerCase()) &&
-                  item.hairColor.toLowerCase().includes(searchTerms.hairColor.toLowerCase()) &&
-                  String(item.height).toLowerCase().includes(searchTerms.height.toLowerCase()) &&
-                  String(item.mass).toLowerCase().includes(searchTerms.mass.toLowerCase()) &&
-                  item.hairColor.toLowerCase().includes(searchTerms.hairColor.toLowerCase())
-              );
-          })
-        : [];
-
+    
+    // input seçenekleriyle datanmızı filtrelediğimiz kısım. useMemo ile hesapladığımız için data veserachTerms değişmeden tekrar hesaplama yapmaz
+    const filteredData = useMemo(() => {
+        return data
+            ? data.filter((item: StarWars) => {
+                  return (
+                      item.name.toLowerCase().includes(searchTerms.name.toLowerCase()) &&
+                      item.birthYear.toLowerCase().includes(searchTerms.birthYear.toLowerCase()) &&
+                      item.eyeColor.toLowerCase().includes(searchTerms.eyeColor.toLowerCase()) &&
+                      item.gender.toLowerCase().includes(searchTerms.gender.toLowerCase()) &&
+                      item.hairColor.toLowerCase().includes(searchTerms.hairColor.toLowerCase()) &&
+                      String(item.height).toLowerCase().includes(searchTerms.height.toLowerCase()) &&
+                      String(item.mass).toLowerCase().includes(searchTerms.mass.toLowerCase()) &&
+                      item.hairColor.toLowerCase().includes(searchTerms.hairColor.toLowerCase())
+                  );
+              })
+            : [];
+    }, [data, searchTerms]);
+        useEffect(() => {
+            setTotalCount(filteredData.length);
+        }, [filteredData, setTotalCount]);
     const handleSearchChange = (column:string, value:string) => {
+        setTotalCount(filteredData.length)
         setSearchTerms((prevSearchTerms) => ({
             ...prevSearchTerms,
             [column]: value,
         }));
+        
     };
+    
 
     const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc" |"default">("default");
@@ -72,6 +80,14 @@ const StarWarsList = () => {
             setSortDirection("asc");
         }
     };
+     const [currentPage, setCurrentPage] = useState(1);
+
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
+
+   
+
     
     const sortedData = [...filteredData].sort((a: any, b: any) => {
         if (sortColumn) {
@@ -95,6 +111,35 @@ const StarWarsList = () => {
     
         return 0;
     });
+     const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentItems = sortedData ? sortedData.slice(indexOfFirstItem, indexOfLastItem) : [];
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+   
+   // sayfada kaç adet eleman gözükeceğine karar vermek için
+    const handleChangePageSize = (newPageSize: number) => {
+        setPageSize(newPageSize);
+        setCurrentPage(1);
+    };
+
+    // filtrelemek için kullanılan değerleri siler ve 1. sayfaya defaulta döner
+    const handleClearFilters = () => {
+        setSearchTerms({
+            name: "",
+            birthYear: "",
+            eyeColor: "",
+            gender:"",
+            hairColor:"",
+            height:"",
+            mass:"",
+            skinColor:"",
+        });
+        setCurrentPage(1);
+        setSortColumn(null);
+        setSortDirection("default");
+    };
 
     return (
         <>
@@ -103,7 +148,10 @@ const StarWarsList = () => {
                     <table className="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">
+                                    <button onClick={handleClearFilters}>Sil</button>
+                                    <div className="border mt-1 bg-light">#</div>
+                                    </th>
                                 <th scope="col">
                                     <input
                                         type="text"
@@ -187,7 +235,7 @@ const StarWarsList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedData.map((item:StarWars, index:number) => (
+                            {currentItems.map((item:StarWars, index:number) => (
                                 <tr key={index}>
                                     <th scope="row">{index + 1}</th>
                                     <td>{item.name}</td>
@@ -203,6 +251,40 @@ const StarWarsList = () => {
                             ))}
                         </tbody>
                     </table>
+                    <div className="d-flex justify-content-center">
+                        <nav aria-label="Page navigation example">
+                            <ul className="pagination">
+                                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+                                        Previous
+                                    </button>
+                                </li>
+                                {Array.from({ length: Math.ceil(totalCount / pageSize) }).map((_, index) => (
+                                    <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                                        <button className="page-link" onClick={() => paginate(index + 1)}>
+                                            {index + 1}
+                                        </button>
+                                    </li>
+                                ))}
+                                <li className={`page-item ${currentPage === Math.ceil(totalCount / pageSize) ? "disabled" : ""}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>
+                                        Next
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                        <select
+                                id="pageSizeSelect"
+                                onChange={(e) => handleChangePageSize(parseInt(e.target.value))}
+                                value={pageSize}
+                                className="border border-primary ms-2"
+                                style={{ maxHeight: "38px", color:"blue" }}
+                            >
+                                <option value={10}>10</option>
+                                <option value={20}>20</option>
+                                <option value={50}>50</option>
+                            </select>
+                    </div>
                 </div>
             </div>
         </>
