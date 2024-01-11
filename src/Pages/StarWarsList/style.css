@@ -9,6 +9,10 @@
 .logodiv{
     background-color: black;
 }
+.table input,
+.table div {
+    width: 100%; 
+}
 
 @media (max-width: 767px) {
     .pagination {

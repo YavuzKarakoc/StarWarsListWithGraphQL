@@ -1,6 +1,7 @@
 .body {
     background-color: black;
     min-height: 100vh;
+   
 }
 
 .logo {
@@ -11,7 +12,7 @@
 .starWarPoster {
     width: 100%;
     height: auto;
-    max-height: 400px;
+    max-height: 360px;
 }
 
 .text {
