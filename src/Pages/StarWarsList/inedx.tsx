@@ -73,6 +73,7 @@ const StarWarsList = () => {
         "asc" | "desc" | "default"
     >("default");
 
+    // her tıklandığında sıralamanın yönünü belirler  asc => desc =>  default
     const handleSort = (column: string) => {
         if (sortColumn === column) {
             switch (sortDirection) {
@@ -98,7 +99,7 @@ const StarWarsList = () => {
         setCurrentPage(pageNumber);
     };
 
-    // burada tıkladığımız kolon adına
+    // burada tıkladığımız kolon adına göre sıralama yapar
     const sortedData = [...filteredData].sort((a: any, b: any) => {
         if (sortColumn) {
             const aValue = a[sortColumn];
@@ -194,281 +195,279 @@ const StarWarsList = () => {
     };
 
     return (
-        <>
-            <div className="d-flex justify-content-center">
-                <div>
-                    <table className="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <button onClick={handleClearFilters}>
-                                        X
-                                    </button>
-                                    <div className="border mt-1 bg-light">
-                                        #
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Name"
-                                        value={searchTerms.name}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "name",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("name")}
-                                    >
-                                        {" "}
-                                        Name
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Birth Year"
-                                        value={searchTerms.birthYear}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "birthYear",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("birthYear")}
-                                    >
-                                        {" "}
-                                        Birth Year
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Eye Color"
-                                        value={searchTerms.eyeColor}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "eyeColor",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("eyeColor")}
-                                    >
-                                        {" "}
-                                        Eye Color
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Gender"
-                                        value={searchTerms.gender}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "gender",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("gender")}
-                                    >
-                                        {" "}
-                                        Gender
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Hair Color"
-                                        value={searchTerms.hairColor}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "hairColor",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("hairColor")}
-                                    >
-                                        {" "}
-                                        Hair Color
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Height"
-                                        value={searchTerms.height}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "height",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("height")}
-                                    >
-                                        {" "}
-                                        Height
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Mass"
-                                        value={searchTerms.mass}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "mass",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("mass")}
-                                    >
-                                        {" "}
-                                        Mass
-                                    </div>
-                                </th>
-                                <th scope="col">
-                                    <input
-                                        type="text"
-                                        placeholder="Skin Color"
-                                        value={searchTerms.skinColor}
-                                        onChange={(e) =>
-                                            handleSearchChange(
-                                                "skinColor",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className="border mt-1 bg-light csp"
-                                        onClick={() => handleSort("skinColor")}
-                                    >
-                                        {" "}
-                                        Skin Color
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentItems.map(
-                                (item: StarWars, index: number) => (
-                                    <tr key={index}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{item.name}</td>
-                                        <td>{item.birthYear}</td>
-                                        <td>{item.eyeColor}</td>
-                                        <td>{item.gender}</td>
-                                        <td>{item.hairColor}</td>
-                                        <td>{item.height}</td>
-                                        <td>{item.mass}</td>
-                                        <td>{item.skinColor}</td>
-                                        {/* Render other columns */}
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
-                    <div className="d-flex justify-content-center">
-                        <nav aria-label="Page navigation example">
-                            <ul className="pagination">
-                                <li
-                                    className={`page-item ${
-                                        currentPage === 1 ? "disabled" : ""
-                                    }`}
+        <div className="">
+            <div className="d-flex justify-content-center logodiv">
+                <img
+                    className="logo"
+                    src={require("../../assets/images/starwarslogo.png")}
+                    alt=""
+                />
+            </div>
+            <div className="table-responsive">
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <button onClick={handleClearFilters}>X</button>
+                                <div className="border mt-1 bg-light">#</div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Name"
+                                    value={searchTerms.name}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "name",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("name")}
                                 >
-                                    <button
-                                        className="page-link"
-                                        onClick={() =>
-                                            handlePageChange(currentPage - 1)
-                                        }
-                                    >
-                                        Previous
-                                    </button>
-                                </li>
-                                {Array.from({
-                                    length: Math.ceil(totalCount / pageSize),
-                                }).map((_, index) => (
-                                    <li
-                                        key={index}
-                                        className={`page-item ${
-                                            currentPage === index + 1
-                                                ? "active"
-                                                : ""
-                                        }`}
-                                    >
-                                        <button
-                                            className="page-link"
-                                            onClick={() => paginate(index + 1)}
-                                        >
-                                            {index + 1}
-                                        </button>
-                                    </li>
-                                ))}
+                                    {" "}
+                                    Name
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Birth Year"
+                                    value={searchTerms.birthYear}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "birthYear",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("birthYear")}
+                                >
+                                    {" "}
+                                    Birth Year
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Eye Color"
+                                    value={searchTerms.eyeColor}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "eyeColor",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("eyeColor")}
+                                >
+                                    {" "}
+                                    Eye Color
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Gender"
+                                    value={searchTerms.gender}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "gender",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("gender")}
+                                >
+                                    {" "}
+                                    Gender
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Hair Color"
+                                    value={searchTerms.hairColor}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "hairColor",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("hairColor")}
+                                >
+                                    {" "}
+                                    Hair Color
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Height"
+                                    value={searchTerms.height}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "height",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("height")}
+                                >
+                                    {" "}
+                                    Height
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Mass"
+                                    value={searchTerms.mass}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "mass",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("mass")}
+                                >
+                                    {" "}
+                                    Mass
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <input
+                                    type="text"
+                                    placeholder="Skin Color"
+                                    value={searchTerms.skinColor}
+                                    onChange={(e) =>
+                                        handleSearchChange(
+                                            "skinColor",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className="border mt-1 bg-light csp"
+                                    onClick={() => handleSort("skinColor")}
+                                >
+                                    {" "}
+                                    Skin Color
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {currentItems.map((item: StarWars, index: number) => (
+                            <tr key={index}>
+                                <th scope="row">{index + 1}</th>
+                                <td>{item.name}</td>
+                                <td>{item.birthYear}</td>
+                                <td>{item.eyeColor}</td>
+                                <td>{item.gender}</td>
+                                <td>{item.hairColor}</td>
+                                <td>{item.height}</td>
+                                <td>{item.mass}</td>
+                                <td>{item.skinColor}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                
+            </div>
+            <div>
+                <div className="d-flex justify-content-center ddd">
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            <li
+                                className={`page-item ${
+                                    currentPage === 1 ? "disabled" : ""
+                                }`}
+                            >
+                                <button
+                                    className="page-link"
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                >
+                                    Previous
+                                </button>
+                            </li>
+                            {Array.from({
+                                length: Math.ceil(totalCount / pageSize),
+                            }).map((_, index) => (
                                 <li
+                                    key={index}
                                     className={`page-item ${
-                                        currentPage ===
-                                        Math.ceil(totalCount / pageSize)
-                                            ? "disabled"
+                                        currentPage === index + 1
+                                            ? "active"
                                             : ""
                                     }`}
                                 >
                                     <button
                                         className="page-link"
-                                        onClick={() =>
-                                            handlePageChange(currentPage + 1)
-                                        }
+                                        onClick={() => paginate(index + 1)}
                                     >
-                                        Next
+                                        {index + 1}
                                     </button>
                                 </li>
-                            </ul>
-                        </nav>
-                        <select
-                            id="pageSizeSelect"
-                            onChange={(e) =>
-                                handleChangePageSize(parseInt(e.target.value))
-                            }
-                            value={pageSize}
-                            className="border border-primary ms-2"
-                            style={{ maxHeight: "38px", color: "blue" }}
-                        >
-                            <option value={10}>10</option>
-                            <option value={20}>20</option>
-                            <option value={50}>50</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button
-                            className="btn btn-success"
-                            onClick={exportToExcel}
-                        >
-                            Export to Excel
-                        </button>
-                    </div>
+                            ))}
+                            <li
+                                className={`page-item ${
+                                    currentPage ===
+                                    Math.ceil(totalCount / pageSize)
+                                        ? "disabled"
+                                        : ""
+                                }`}
+                            >
+                                <button
+                                    className="page-link"
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                >
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                    <select
+                        id="pageSizeSelect"
+                        onChange={(e) =>
+                            handleChangePageSize(parseInt(e.target.value))
+                        }
+                        value={pageSize}
+                        className="border border-primary ms-2"
+                        style={{ maxHeight: "38px", color: "blue" }}
+                    >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                    </select>
+                </div>
+                <div>
+                    <button className="btn btn-success" onClick={exportToExcel}>
+                        Export to Excel
+                    </button>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

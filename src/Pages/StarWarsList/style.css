@@ -1,3 +1,18 @@
 .csp{
     cursor: n-resize;
 }
+
+.logo {
+    width: 320px;
+    height: 120px;
+}
+.logodiv{
+    background-color: black;
+}
+
+@media (max-width: 767px) {
+    .pagination {
+        flex-wrap: wrap; 
+    }
+    
+}

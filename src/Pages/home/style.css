@@ -1,0 +1,19 @@
+.body {
+    background-color: black;
+    min-height: 100vh;
+}
+
+.logo {
+    width: 320px;
+    height: 120px;
+}
+
+.starWarPoster {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+}
+
+.text {
+    color: white;
+}
